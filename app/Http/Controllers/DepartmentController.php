@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StudyProgram\StoreRequest;
-use App\Http\Requests\StudyProgram\UpdateRequest;
-use App\Models\StudyProgram;
+use App\Http\Requests\Department\StoreRequest;
+use App\Http\Requests\Department\UpdateRequest;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
-class StudyProgramController extends Controller
+class DepartmentController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorize('isAdmin');
-    }
-
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $data = StudyProgram::get();
+        $data = Department::with('user')->paginate(10);
 
         return $this->apiRespond('ok', $data, 200);
     }
@@ -37,7 +32,7 @@ class StudyProgramController extends Controller
         $validated = $request->validated();
 
         try {
-            $data = StudyProgram::create($validated);
+            $data = Department::create($validated);
             return $this->apiRespond('ok', $data, 201);
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
@@ -52,7 +47,7 @@ class StudyProgramController extends Controller
      */
     public function show($id)
     {
-        $data = StudyProgram::find($id);
+        $data = Department::find($id);
 
         if(!is_null($data)) {
             return $this->apiRespond('ok', $data, 200);
@@ -72,8 +67,8 @@ class StudyProgramController extends Controller
         $validated = $request->validated();
         
         try {
-            $data = StudyProgram::find($id);
-            
+            $data = Department::find($id);
+
             if(!is_null($data)) {
                 $data->update($validated);
                 return $this->apiRespond('ok', $data, 200);
@@ -93,7 +88,7 @@ class StudyProgramController extends Controller
     public function destroy($id)
     {
         try {
-            $data = StudyProgram::find($id);
+            $data = Department::find($id);
 
             if(!is_null($data)) {
                 $data->delete();

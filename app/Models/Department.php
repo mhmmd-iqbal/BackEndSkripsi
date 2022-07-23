@@ -5,31 +5,32 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Period extends Model
+class Department extends Model
 {
     use HasFactory;
 
-    protected $table = 'periods';
+    protected $table = 'departments';
 
     protected $fillable = [
+        'user_id',
+        'level', 
         'name',
-        'period_start',
-        'period_end'
-    ];
-
-    protected $hidden = [
-        'deleted_at'
+        'type'
     ];
 
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
-        'period_start' => 'datetime:Y-m-d',
-        'period_end'   => 'datetime:Y-m-d',
     ];
 
-    public function InstrumentTopics() {
-        return $this->hasMany(InstrumentTopic::class, 'period_id', 'id');
+    protected $hidden = [
+        'deleted_at',
+        'user_id'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

@@ -1,8 +1,11 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\InstrumentController;
+use App\Http\Controllers\InstrumentSubTopicController;
+use App\Http\Controllers\InstrumentTopicController;
 use App\Http\Controllers\PeriodController;
-use App\Http\Controllers\StudyProgramController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -29,13 +32,7 @@ Route::group(['middleware' => 'api'], function () {
             Route::put('/{id}', [PeriodController::class, 'update']);
             Route::delete('/{id}', [PeriodController::class, 'destroy']);
         });
-        Route::group(['prefix' => 'study-programs'], function(){
-            Route::get('/', [StudyProgramController::class, 'index']);
-            Route::post('/', [StudyProgramController::class, 'store']);
-            Route::get('/{id}', [StudyProgramController::class, 'show']);
-            Route::put('/{id}', [StudyProgramController::class, 'update']);
-            Route::delete('/{id}', [StudyProgramController::class, 'destroy']);
-        });
+                
         Route::group(['prefix' => 'users'], function(){
             Route::get('/', [UserController::class, 'index']);
             Route::post('/', [UserController::class, 'store']);
@@ -44,6 +41,27 @@ Route::group(['middleware' => 'api'], function () {
             Route::delete('/{id}', [UserController::class, 'destroy']);
         });
 
+        Route::group(['prefix' => 'instrument-topics'], function(){
+            Route::get('/', [InstrumentTopicController::class, 'index']);
+            Route::post('/', [InstrumentTopicController::class, 'store']);
+        });
+
+        Route::group(['prefix' => 'instrument-sub-topics'], function(){
+            Route::post('/', [InstrumentSubTopicController::class, 'store']);
+        });
+
+        Route::group(['prefix' => 'instruments'], function(){
+            Route::get('/', [InstrumentController::class, 'index']);
+            Route::post('/', [InstrumentController::class, 'store']);
+        });
+
+        Route::group(['prefix' => 'departments'], function(){
+            Route::get('/', [DepartmentController::class, 'index']);
+            Route::post('/', [DepartmentController::class, 'store']);
+            Route::get('/{id}', [DepartmentController::class, 'show']);
+            Route::put('/{id}', [DepartmentController::class, 'update']);
+            Route::delete('/{id}', [DepartmentController::class, 'destroy']);
+        });
 
     });
 });

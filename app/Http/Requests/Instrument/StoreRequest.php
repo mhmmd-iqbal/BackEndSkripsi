@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\StudyProgram;
+namespace App\Http\Requests\Instrument;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'level'     => 'required|in:D1,D2,D3,D4',
-            'name'      => 'required|string',
-            'head_name' => 'required'
+            'instrument_sub_topic_id'   => 'exists:instrument_sub_topics,id',
+            'matrix'                    => 'string',
+            'audit_type'                => 'in:academic,non_academic',
+            'is_available'              => 'boolean'
         ];
     }
 }

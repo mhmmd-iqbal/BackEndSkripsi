@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\StudyProgram;
+namespace App\Http\Requests\InstrumentTopic;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,9 +24,8 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'level'     => 'required|in:D1,D2,D3,D4',
-            'name'      => 'required|string',
-            'head_name' => 'required'
+            'period_id' => 'exists:periods,id',
+            'name'      => 'string'
         ];
     }
 }

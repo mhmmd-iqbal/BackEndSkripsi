@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStudyProgramsTable extends Migration
+class CreateDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateStudyProgramsTable extends Migration
      */
     public function up()
     {
-        Schema::create('study_programs', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->enum('level', ['D1', 'D2', 'D3', 'D4'])->default('D4');
+            $table->bigInteger('user_id')->unsigned();
             $table->string('name', 100);
-            $table->string('head_name', 100);
+            $table->enum('level', ['D1', 'D2', 'D3', 'D4'])->nullable();
+            $table->enum('type', ['academic', 'non_academic'])->default('academic');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +32,6 @@ class CreateStudyProgramsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('study_programs');
+        Schema::dropIfExists('departments');
     }
 }

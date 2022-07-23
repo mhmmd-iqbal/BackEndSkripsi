@@ -6,12 +6,15 @@ use App\Http\Requests\Period\StoreRequest;
 use App\Http\Requests\Period\UpdateRequest;
 use App\Models\Period;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PeriodController extends Controller
 {
     public function __construct()
     {
-        $this->authorize('isAdmin');
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
     }
 
     /**

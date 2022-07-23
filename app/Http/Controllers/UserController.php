@@ -6,12 +6,15 @@ use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->authorize('isAdmin');
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
     }
 
     /**
@@ -21,7 +24,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = User::get();
+        $data = User::paginate(10);
 
         return $this->apiRespond('ok', $data, 200);
     }

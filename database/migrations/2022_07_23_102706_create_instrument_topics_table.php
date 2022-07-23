@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePeriodsTable extends Migration
+class CreateInstrumentTopicsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreatePeriodsTable extends Migration
      */
     public function up()
     {
-        Schema::create('periods', function (Blueprint $table) {
+        Schema::create('instrument_topics', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('period_id')->unsigned();
             $table->string('name', 100);
-            $table->date('period_start')->nullable();
-            $table->date('period_end')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('period_id')->references('id')->on('periods')->onDelete('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ class CreatePeriodsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('periods');
+        Schema::dropIfExists('instrument_topics');
     }
 }

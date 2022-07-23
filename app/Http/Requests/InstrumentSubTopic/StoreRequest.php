@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Period;
+namespace App\Http\Requests\InstrumentSubTopic;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,9 +24,8 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'  => 'string',
-            'period_start'  => 'date',
-            'period_end'    => 'date'
+            'instrument_topic_id'   => 'exists:instrument_topics,id',
+            'name'                  => 'string'
         ];
     }
 }

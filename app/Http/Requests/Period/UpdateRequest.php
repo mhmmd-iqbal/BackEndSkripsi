@@ -24,7 +24,9 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'  => 'string'
+            'name'  => 'string',
+            'period_start'  => 'date',
+            'period_end'    => 'date'
         ];
     }
 }
