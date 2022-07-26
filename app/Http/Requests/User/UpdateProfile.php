@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Period;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateProfile extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,11 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'string',
-            'period_start'  => 'date',
-            'period_end'    => 'date'
+            'name'      => 'string',
+            'email'     => 'string|email',
+            'nip'       => 'string',
+            'password'  => 'string',
+            'retype_password' => 'required_with:password'
         ];
     }
 }

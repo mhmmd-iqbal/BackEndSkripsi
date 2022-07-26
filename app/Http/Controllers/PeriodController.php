@@ -40,8 +40,12 @@ class PeriodController extends Controller
         $validated = $request->validated();
 
         try {
-            $data = Period::create($validated);
-            return $this->apiRespond('ok', $data, 201);
+            if($validated['period_start'] < $validated['period_end']) {
+                $data = Period::create($validated);
+                return $this->apiRespond('ok', $data, 200);
+            } else {
+                return $this->apiRespond('Request tidak sesuai', [], 400);                
+            }
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }
@@ -78,8 +82,12 @@ class PeriodController extends Controller
             $data = Period::find($id);
 
             if(!is_null($data)) {
-                $data->update($validated);
-                return $this->apiRespond('ok', $data, 200);
+                if($validated['period_start'] < $validated['period_end']) {
+                    $data = Period::create($validated);
+                    return $this->apiRespond('ok', $data, 200);
+                } else {
+                    return $this->apiRespond('Request tidak sesuai', [], 400);                
+                }
             }
             return $this->apiRespond('Not found', [], 404);
         } catch (\Throwable $th) {

@@ -32,4 +32,9 @@ class Period extends Model
     public function InstrumentTopics() {
         return $this->hasMany(InstrumentTopic::class, 'period_id', 'id');
     }
+
+    public function auditForms()
+    {
+        return $this->hasMany(AuditForm::class);
+    }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Period;
+namespace App\Http\Requests\Audit;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class RejectFulfillmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,12 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'string',
-            'period_start'  => 'date',
-            'period_end'    => 'date'
+            "document_no" => 'string',
+            "revision" => 'string',
+            "category" => 'string',
+            "finding_description" => 'string',
+            "root_caused_Description" => 'string',
+            "consequence_description" => 'string'
         ];
     }
 }

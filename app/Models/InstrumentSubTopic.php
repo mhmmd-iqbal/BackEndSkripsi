@@ -27,12 +27,12 @@ class InstrumentSubTopic extends Model
         'deleted_at',
     ];
 
-    public function Topic()
+    public function topic()
     {
         return $this->belongsTo(InstrumentTopic::class, 'instrument_topic_id', 'id');
     }
 
-    public function Instruments()
+    public function instruments()
     {
         return $this->hasMany(Instrument::class, 'instrument_sub_topic_id', 'id');
     }

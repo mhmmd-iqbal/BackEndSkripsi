@@ -17,7 +17,7 @@ class CreateInstrumentsTable extends Migration
             $table->id();
             $table->bigInteger('instrument_sub_topic_id')->unsigned();
             $table->text('matrix');
-            $table->enum('audit_type', ['academic', 'non_academic'])->default('academic');
+            $table->enum('scope_type', ['academic', 'non_academic'])->default('academic');
             $table->boolean('is_available')->default(false);
             $table->timestamps();
             $table->softDeletes();

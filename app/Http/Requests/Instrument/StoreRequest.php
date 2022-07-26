@@ -25,9 +25,10 @@ class StoreRequest extends FormRequest
     {
         return [
             'instrument_sub_topic_id'   => 'exists:instrument_sub_topics,id',
-            'matrix'                    => 'string',
-            'audit_type'                => 'in:academic,non_academic',
-            'is_available'              => 'boolean'
+            'scope_type'                => 'in:academic,non_academic',
+            'instruments'               => 'required',
+            'instruments.*.matrix'      => 'string',
+            'instruments.*.is_available'=> 'boolean',
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Period;
+namespace App\Http\Requests\Audit;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,9 +24,13 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'string',
-            'period_start'  => 'date',
-            'period_end'    => 'date'
+            'department_id'     => 'exists:departments,id',
+            'period_id'         => 'exists:periods,id',
+            'auditor_id'        => 'exists:users,id',
+            'auditee_id'        => 'exists:users,id',
+            'document_no'       => 'string',
+            'auditor_member_list_json'  => 'nullable',
+            'audit_title'       => 'string'
         ];
     }
 }

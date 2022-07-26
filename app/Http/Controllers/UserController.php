@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateProfile;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,9 +13,6 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        if(!Gate::allows('isAdmin')){
-            abort(401, 'Unauthorized');
-        }
     }
 
     /**
@@ -24,6 +22,10 @@ class UserController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         $data = User::paginate(10);
 
         return $this->apiRespond('ok', $data, 200);
@@ -37,6 +39,10 @@ class UserController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         $validated = $request->validated();
 
         try {
@@ -45,7 +51,7 @@ class UserController extends Controller
             }
 
             $data = User::create($validated);
-            return $this->apiRespond('ok', $data, 201);
+            return $this->apiRespond('ok', $data, 200);
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }
@@ -59,6 +65,10 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         $data = User::find($id);
 
         if(!is_null($data)) {
@@ -77,20 +87,25 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         $validated = $request->validated();
         
         try {
-            $data = User::find($id);
-
-            if(isset($validated['password'])) {
-                $validated['password'] = bcrypt($validated['password']);
-            }
+            $data = User::findOrFail($id);
             
-            if(!is_null($data)) {
-                $data->update($validated);
-                return $this->apiRespond('ok', $data, 200);
-            }
-            return $this->apiRespond('Not found', [], 404);
+            $data->update([
+                'name'      => $validated['name'] ?? $data->name,
+                'email'     => $validated['email'] ?? $data->email,
+                'nip'       => $validated['nip'] ?? $data->nip,
+                'role'      => $validated['role'] ?? $data->role,
+                'password'  => isset($validated['password']) ? bcrypt($validated['password']) : $data->password 
+            ]);
+            
+            return $this->apiRespond('ok', $data, 200);
+
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }
@@ -104,6 +119,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         try {
             $data = User::find($id);
 
@@ -117,8 +136,43 @@ class UserController extends Controller
         }
     }
 
-    public function resetPassword()
+
+    public function getProfile()
     {
-        
+        if(!auth()->user()) {
+            abort(403, 'Forbidden');
+        }
+
+        return $this->apiRespond('ok', auth()->user(), 200);
+    }
+
+    public function updateProfile(UpdateProfile $request)
+    {
+        if(!auth()->user()) {
+            abort(403, 'Forbidden');
+        }
+
+        $validated = $request->validated();
+
+        if($validated['password'] !== $validated['retype_password']) {
+            return $this->apiRespond('Password dan Retype password tidak sama', [], 400);
+        }
+
+        try {
+            $data = User::findOrFail(auth()->user()->id);
+            
+            $data->update([
+                'name'      => $validated['name'] ?? $data->name,
+                'email'     => $validated['email'] ?? $data->email,
+                'nip'       => $validated['nip'] ?? $data->nip,
+                'password'  => isset($validated['password']) ? bcrypt($validated['password']) : $data->password 
+            ]);
+            
+            return $this->apiRespond('ok', $data, 200);
+
+        } catch (\Throwable $th) {
+            return $this->apiRespond($th->getMessage(), [], 500);
+        }
+
     }
 }

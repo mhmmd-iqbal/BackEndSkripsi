@@ -25,7 +25,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'period_id' => 'exists:periods,id',
-            'name'      => 'string'
+            'name'      => 'string',
+            'sub_topics'=> 'nullable'
         ];
     }
 }

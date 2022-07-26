@@ -15,7 +15,7 @@ class Department extends Model
         'user_id',
         'level', 
         'name',
-        'type'
+        'scope_type'
     ];
 
     protected $casts = [
@@ -32,5 +32,10 @@ class Department extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function auditForms()
+    {
+        return $this->hasMany(AuditForm::class);
     }
 }

@@ -24,7 +24,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'type'  => 'in:academic,non_academic'
+            'scope_type'  => 'in:academic,non_academic'
         ];
     }
 }

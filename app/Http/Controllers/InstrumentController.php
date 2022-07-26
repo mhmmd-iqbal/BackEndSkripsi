@@ -17,9 +17,9 @@ class InstrumentController extends Controller
                 ->isAvailable()
                 ->paginate(10);
                 
-        if(isset($validated['type'])) {
+        if(isset($validated['scope_type'])) {
             $data = Instrument::with('SubTopic.Topic.Period')
-                    ->isType($validated['type'])
+                    ->isType($validated['scope_type'])
                     ->isAvailable()
                     ->paginate(10);
         }
@@ -32,8 +32,16 @@ class InstrumentController extends Controller
         $validated = $request->validated();
 
         try {
-            $data = Instrument::create($validated);
-            return $this->apiRespond('ok', $data, 201);
+            foreach ($validated['instruments'] as $instrument) {
+                $data[] = Instrument::create([
+                    'instrument_sub_topic_id'   => $validated['instrument_sub_topic_id'],
+                    'scope_type'                => $validated['scope_type'],
+                    'matrix'                    => $instrument['matrix'],
+                    'is_available'              => $instrument['is_available']
+                ]);  
+            }
+
+            return $this->apiRespond('ok', $data, 200);
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }

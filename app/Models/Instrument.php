@@ -14,7 +14,7 @@ class Instrument extends Model
     protected $fillable = [
         'instrument_sub_topic_id',
         'matrix',
-        'audit_type',
+        'scope_type',
         'is_available',
     ];
 
@@ -26,17 +26,19 @@ class Instrument extends Model
 
     protected $hidden = [
         'instrument_sub_topic_id',
-        'deleted_at'
+        'deleted_at',
+        'is_available',
+        'scope_type'
     ];
 
-    public function SubTopic()
+    public function subTopic()
     {
         return $this->belongsTo(InstrumentSubTopic::class, 'instrument_sub_topic_id', 'id');
     }
 
     public function scopeIsType($query, $param)
     {
-        return $query->where('audit_type', $param);
+        return $query->where('scope_type', $param);
     }
 
     public function scopeIsAvailable($query)

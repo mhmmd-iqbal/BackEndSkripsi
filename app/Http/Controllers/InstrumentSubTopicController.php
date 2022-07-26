@@ -22,7 +22,7 @@ class InstrumentSubTopicController extends Controller
 
         try {
             $data = InstrumentSubTopic::create($validated);
-            return $this->apiRespond('ok', $data, 201);
+            return $this->apiRespond('ok', $data, 200);
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }

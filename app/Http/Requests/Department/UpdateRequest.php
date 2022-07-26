@@ -24,10 +24,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'level'     => 'nullable|in:D1,D2,D3,D4',
-            'name'      => 'required|string',
-            'type'      => 'in:academic,non_academic',
-            'user_id'   => 'exists:users,id'
+            'level'         => 'nullable|in:D1,D2,D3,D4',
+            'name'          => 'required|string',
+            'scope_type'    => 'in:academic,non_academic',
+            'user_id'       => 'exists:users,id'
         ];
     }
 }

@@ -21,12 +21,12 @@ class InstrumentTopicController extends Controller
     {
         $validated = $request->validated(); 
         $data = InstrumentTopic::with('period')
-                ->with('SubTopics.instruments')
+                ->with('subTopics.instruments')
                 ->orderBy('period_id')->paginate(10);
                 
         if(isset($validated['period_id'])) {
             $data = InstrumentTopic::with('period')
-                    ->with('SubTopics.instruments')
+                    ->with('subTopics.instruments')
                     ->where('period_id', $validated['period_id'])
                     ->orderBy('period_id')->paginate(10);
         }
@@ -40,7 +40,14 @@ class InstrumentTopicController extends Controller
 
         try {
             $data = InstrumentTopic::create($validated);
-            return $this->apiRespond('ok', $data, 201);
+
+            foreach ($validated['sub_topics'] as $sub_topic) {
+                $data->subTopics()->create([
+                    'name'  => $sub_topic
+                ]);
+            }
+
+            return $this->apiRespond('ok', $data, 200);
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }

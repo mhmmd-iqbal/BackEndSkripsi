@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\AuditFormController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
@@ -39,15 +41,17 @@ Route::group(['middleware' => 'api'], function () {
             Route::get('/{id}', [UserController::class, 'show']);
             Route::put('/{id}', [UserController::class, 'update']);
             Route::delete('/{id}', [UserController::class, 'destroy']);
+
+        });
+        
+        Route::group(['prefix' => 'profile'], function(){
+            Route::get('/', [UserController::class, 'getProfile']);
+            Route::put('/', [UserController::class, 'updateProfile']);
         });
 
-        Route::group(['prefix' => 'instrument-topics'], function(){
+        Route::group(['prefix' => 'topics'], function(){
             Route::get('/', [InstrumentTopicController::class, 'index']);
             Route::post('/', [InstrumentTopicController::class, 'store']);
-        });
-
-        Route::group(['prefix' => 'instrument-sub-topics'], function(){
-            Route::post('/', [InstrumentSubTopicController::class, 'store']);
         });
 
         Route::group(['prefix' => 'instruments'], function(){
@@ -62,6 +66,15 @@ Route::group(['middleware' => 'api'], function () {
             Route::put('/{id}', [DepartmentController::class, 'update']);
             Route::delete('/{id}', [DepartmentController::class, 'destroy']);
         });
+        
+        Route::group(['prefix' => 'audits'], function(){
+            Route::get('/', [AuditFormController::class, 'index']);
+            Route::post('/', [AuditFormController::class, 'store']);
+            Route::get('/{id}', [AuditFormController::class, 'show']);
 
+            Route::post('/{audit_id}/instrument/{instrument_id}/fulfillment', [AuditFormController::class, 'fulfillment']);
+            Route::put('/{audit_id}/instrument/{instrument_id}/approve', [AuditFormController::class, 'approve']);
+            Route::put('/{audit_id}/instrument/{instrument_id}/reject', [AuditFormController::class, 'reject']);
+        });
     });
 });

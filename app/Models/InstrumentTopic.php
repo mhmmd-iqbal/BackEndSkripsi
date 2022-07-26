@@ -32,7 +32,7 @@ class InstrumentTopic extends Model
         return $this->belongsTo(Period::class, 'period_id', 'id');
     }
 
-    public function SubTopics()
+    public function subTopics()
     {
         return $this->hasMany(InstrumentSubTopic::class, 'instrument_topic_id', 'id');
     }

@@ -18,7 +18,7 @@ class CreateDepartmentsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('name', 100);
             $table->enum('level', ['D1', 'D2', 'D3', 'D4'])->nullable();
-            $table->enum('type', ['academic', 'non_academic'])->default('academic');
+            $table->enum('scope_type', ['academic', 'non_academic'])->default('academic');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
