@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\UserActivity;
 use Validator;
 
 class AuthController extends Controller
@@ -29,6 +30,14 @@ class AuthController extends Controller
         if (! $token = auth()->attempt($validator)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+        
+        UserActivity::create([
+            'user_id'       => auth()->user()->id,
+            'email'         => auth()->user()->email,
+            'activity'      => 'Log In',
+            'user_agent'    => request()->header('user-agent'),
+            'ip_address'    => request()->ip()
+        ]);
         return $this->createNewToken($token);
     }
     
@@ -38,6 +47,14 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout() {
+        UserActivity::create([
+            'user_id'       => auth()->user()->id,
+            'email'         => auth()->user()->email,
+            'activity'      => 'Log Out',
+            'user_agent'    => request()->header('user-agent'),
+            'ip_address'    => request()->ip()
+        ]);
+
         auth()->logout();
         return response()->json(['message' => 'User successfully signed out']);
     }
