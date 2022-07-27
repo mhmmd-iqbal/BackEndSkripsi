@@ -5,3 +5,6 @@
 4. run command : php artisan storage:link (for upload file link)
 5. run command : php artisan migrate --seed (to defined DB and insert seeding default user)
 6. run command : php artisan serve (to run laravel project)
+
+
+## Link Postman : https://www.getpostman.com/collections/da676bc147e262142eb9 
