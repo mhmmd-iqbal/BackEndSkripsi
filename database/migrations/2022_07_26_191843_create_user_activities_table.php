@@ -17,9 +17,9 @@ class CreateUserActivitiesTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->string('email', 100)->nullable();
-            $table->string('activity', 100)->nullable();
+            $table->string('activity', 255)->nullable();
             $table->string('ip_address', 100)->nullable();
-            $table->string('user_agent', 100)->nullable();
+            $table->string('user_agent', 255)->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
             $table->timestamps();
         });
