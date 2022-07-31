@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\IndexRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateProfile;
 use App\Http\Requests\User\UpdateRequest;
@@ -20,15 +21,26 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         if(!Gate::allows('isAdmin')){
             abort(401, 'Unauthorized');
         }
 
-        $data = User::paginate(10);
+        $validated = $request->validated();
+        $users = new User;
+        
+        if(isset($validated['keyword'])) {
+            $users = $users->ofKeyword($validated['keyword']);
+        }
 
-        return $this->apiRespond('ok', $data, 200);
+        if(isset($validated['role'])) {
+            $users = $users->isRole($validated['role']);
+        }
+
+        $users = $users->paginate(10);
+
+        return $this->apiRespond('ok', $users, 200);
     }
 
     /**

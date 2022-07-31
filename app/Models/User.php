@@ -76,4 +76,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $query->where('role', $param);
     }    
+
+    public function scopeOfKeyword($query, $param)
+    {
+        return $query->where('name',  'LIKE', '%'.$param.'%')->orWhere('email',  'LIKE', '%'.$param.'%');
+    }
 }
