@@ -82,12 +82,16 @@ class PeriodController extends Controller
             $data = Period::find($id);
 
             if(!is_null($data)) {
-                if($validated['period_start'] < $validated['period_end']) {
-                    $data = Period::create($validated);
-                    return $this->apiRespond('ok', $data, 200);
-                } else {
+                if($validated['period_start'] >= $validated['period_end']) {
                     return $this->apiRespond('Request tidak sesuai', [], 400);                
                 }
+                
+                $data = $data->update([
+                    'name'          => $validated['name'] ?? $data->name,
+                    'period_start'  => $validated['period_start'] ?? $data->period_start,
+                    'period_end'    => $validated['period_end'] ?? $data->period_end,
+                ]);
+                return $this->apiRespond('ok', $data, 200);
             }
             return $this->apiRespond('Not found', [], 404);
         } catch (\Throwable $th) {

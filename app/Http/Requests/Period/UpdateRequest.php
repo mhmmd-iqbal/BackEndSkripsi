@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'name'          => 'string',
             'period_start'  => 'date',
-            'period_end'    => 'date'
+            'period_end'    => 'required_with:period_start'
         ];
     }
 }
