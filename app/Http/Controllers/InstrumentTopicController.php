@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InstrumentTopic\IndexRequest;
 use App\Http\Requests\InstrumentTopic\StoreRequest;
+use App\Models\InstrumentSubTopic;
 use App\Models\InstrumentTopic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -51,5 +52,19 @@ class InstrumentTopicController extends Controller
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }
+    }
+
+    public function subTopic($id) {
+        $data = InstrumentSubTopic::where('id', $id)
+                ->with(['instruments' => function($q) {
+                    return $q->orderBy('scope_type');
+                }])
+                ->with('topic')
+                ->first();
+
+        if(!is_null($data)) {
+            return $this->apiRespond('ok', $data, 200);
+        }
+        return $this->apiRespond('Not found', [], 404);
     }
 }

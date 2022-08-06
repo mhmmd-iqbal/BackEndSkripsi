@@ -28,7 +28,6 @@ class Instrument extends Model
         'instrument_sub_topic_id',
         'deleted_at',
         'is_available',
-        'scope_type'
     ];
 
     public function subTopic()

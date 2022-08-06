@@ -54,6 +54,10 @@ Route::group(['middleware' => 'api'], function () {
             Route::post('/', [InstrumentTopicController::class, 'store']);
         });
 
+        Route::group(['prefix' => 'sub-topics'], function(){
+            Route::get('/{id}', [InstrumentTopicController::class, 'subTopic']);
+        });
+
         Route::group(['prefix' => 'instruments'], function(){
             Route::get('/', [InstrumentController::class, 'index']);
             Route::post('/', [InstrumentController::class, 'store']);
