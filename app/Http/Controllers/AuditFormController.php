@@ -30,19 +30,18 @@ class AuditFormController extends Controller
         $validated = $request->validated();
 
         $auditor    = User::where('id', $validated['auditor_id'])->isRole('auditor')->first();
-        $auditee    = User::where('id', $validated['auditee_id'])->isRole('auditee')->first();
         $period     = Period::where('id', $validated['period_id'])->first();
         $department = Department::where('id', $validated['department_id'])->first();
+        $auditee    = $department->user;
         
         if(is_null($auditor) || is_null ($period) || is_null($department)) {
             return $this->apiRespond('Not Found ID', [], 404);
         }
-
         try {
             $data = [
                 'department_id'             => $validated['department_id'],
                 'period_id'                 => $validated['period_id'],
-                'auditee_id'                => $validated['auditee_id'],
+                'auditee_id'                => $auditee->id,
                 'auditor_id'                => $validated['auditor_id'],
                 'document_no'               => $validated['document_no'],
                 'department_name'           => $department->name,
@@ -50,9 +49,10 @@ class AuditFormController extends Controller
                 'auditor_name'              => $auditor->name,
                 'auditor_member_list_json'  => json_encode($validated['auditor_member_list_json']),
                 'scope_type'                => $department->scope_type,
-                'audit_type'                => 'Lapangan',
+                'audit_type'                => $validated['audit_type'] ?? 'Lapangan',
                 'audit_title'               => $validated['audit_title'],
-                'audit_at'                  => Carbon::now()
+                'audit_at'                  => $validated['audit_at'],
+                'audit_standart'            => $validated['audit_standart']
             ];
     
             $result = AuditForm::create($data);

@@ -27,10 +27,12 @@ class StoreRequest extends FormRequest
             'department_id'     => 'exists:departments,id',
             'period_id'         => 'exists:periods,id',
             'auditor_id'        => 'exists:users,id',
-            'auditee_id'        => 'exists:users,id',
             'document_no'       => 'string',
             'auditor_member_list_json'  => 'nullable',
-            'audit_title'       => 'string'
+            'audit_title'       => 'string',
+            'audit_at'          => 'date',
+            'audit_type'        => 'string',
+            'audit_standart'    => 'string'
         ];
     }
 }

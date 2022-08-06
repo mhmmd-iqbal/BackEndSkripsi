@@ -27,7 +27,9 @@ class UserController extends Controller
             abort(401, 'Unauthorized');
         }
 
-        $validated = $request->validated();
+        $validated  = $request->validated();
+        $pagination = $validated['pagination'] ?? 1;
+
         $users = new User;
         
         if(isset($validated['keyword'])) {
@@ -38,7 +40,7 @@ class UserController extends Controller
             $users = $users->isRole($validated['role']);
         }
 
-        $users = $users->paginate(10);
+        $users = $pagination ? $users->paginate(10) : $users->get();
 
         return $this->apiRespond('ok', $users, 200);
     }

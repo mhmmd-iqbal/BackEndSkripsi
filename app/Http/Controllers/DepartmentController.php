@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Department\IndexRequest;
 use App\Http\Requests\Department\StoreRequest;
 use App\Http\Requests\Department\UpdateRequest;
 use App\Models\Department;
@@ -14,9 +15,14 @@ class DepartmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
-        $data = Department::with('user')->paginate(10);
+        $validated  = $request->validated();
+        $pagination = $validated['pagination'] ?? 1;
+
+        $data = $pagination ? 
+                Department::with('user')->paginate(10) : 
+                Department::with('user')->get();
 
         return $this->apiRespond('ok', $data, 200);
     }
@@ -47,7 +53,7 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        $data = Department::find($id);
+        $data = Department::with('user')->find($id);
 
         if(!is_null($data)) {
             return $this->apiRespond('ok', $data, 200);

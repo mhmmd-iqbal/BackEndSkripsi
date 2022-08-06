@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Department;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,8 +24,6 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'keyword'   => 'nullable|string',
-            'role'      => 'in:auditee,auditor,manager',
             'page'      => 'nullable|numeric',
             'pagination'=> 'boolean'
         ];
