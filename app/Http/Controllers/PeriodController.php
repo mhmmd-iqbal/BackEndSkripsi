@@ -12,9 +12,6 @@ class PeriodController extends Controller
 {
     public function __construct()
     {
-        if(!Gate::allows('isAdmin')){
-            abort(401, 'Unauthorized');
-        }
     }
 
     /**
@@ -37,6 +34,10 @@ class PeriodController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         $validated = $request->validated();
 
         try {
@@ -55,6 +56,10 @@ class PeriodController extends Controller
      */
     public function show($id)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
         $data = Period::find($id);
 
         if(!is_null($data)) {
@@ -73,6 +78,9 @@ class PeriodController extends Controller
     public function update(UpdateRequest $request, $id)
     {
         $validated = $request->validated();
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
         
         try {
             $data = Period::find($id);
@@ -97,6 +105,10 @@ class PeriodController extends Controller
      */
     public function destroy($id)
     {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+        
         try {
             $data = Period::find($id);
 

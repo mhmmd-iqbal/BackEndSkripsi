@@ -8,6 +8,7 @@ use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\InstrumentSubTopicController;
 use App\Http\Controllers\InstrumentTopicController;
 use App\Http\Controllers\PeriodController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -79,6 +80,10 @@ Route::group(['middleware' => 'api'], function () {
             Route::post('/{audit_id}/instrument/{instrument_id}/fulfillment', [AuditFormController::class, 'fulfillment']);
             Route::put('/{audit_id}/instrument/{instrument_id}/approve', [AuditFormController::class, 'approve']);
             Route::put('/{audit_id}/instrument/{instrument_id}/reject', [AuditFormController::class, 'reject']);
+        });
+
+        Route::group(['prefix' => 'report'], function(){
+            Route::get('/total-data', [ReportController::class, 'totalData']);
         });
     });
 });
