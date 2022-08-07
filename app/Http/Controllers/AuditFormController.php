@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Audit\FulfillmentRequest;
+use App\Http\Requests\Audit\IndexRequest;
 use App\Http\Requests\Audit\RejectFulfillmentRequest;
 use App\Http\Requests\Audit\StoreRequest;
 use App\Models\AuditForm;
@@ -63,16 +64,30 @@ class AuditFormController extends Controller
         }
     }
 
-    public function index()
+    public function index(IndexRequest $request)
     {
-        if(Gate::allows('isAdmin') || Gate::allows('isManager')) {
-            $data = AuditForm::paginate(10);
-        } else if(Gate::allows('isAuditee')) {
-            // get result if login auditee 
-            $data = AuditForm::where('auditee_id', auth()->user()->id)->get();
-        } else if(Gate::allows('isAuditor')) {
-            // get result if login auditor
-            $data = AuditForm::where('auditor_id', auth()->user()->id )->get();
+        $validated = $request->validated();
+
+        $pagination = $validated['pagination'] ?? true;
+
+        if(Gate::allows('isAdmin') || Gate::allows('isManager') || Gate::allows('isAuditee') || Gate::allows('isAuditor')) {
+
+            $data = new AuditForm();
+
+            if(Gate::allows('isAuditee')) {
+                // get result if login auditee 
+                $data = $data->where('auditee_id', auth()->user()->id);
+            } else if(Gate::allows('isAuditor')) {
+                // get result if login auditor
+                $data = $data->where('auditor_id', auth()->user()->id );
+            }
+
+            if(isset($validated['periode_id'])) {
+                $data = $data->where('periode_id', $validated['periode_id'] );
+            }
+
+            $data = $pagination ? $data->paginate(10) : $data->get();
+
         } else {
             abort(401, 'Unauthorized');
         }
