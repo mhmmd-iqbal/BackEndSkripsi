@@ -25,8 +25,6 @@ class StoreRequest extends FormRequest
     {
         return [
             'name'          => 'string',
-            'period_start'  => 'date',
-            'period_end'    => 'date'
         ];
     }
 }

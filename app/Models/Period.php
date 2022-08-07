@@ -13,8 +13,6 @@ class Period extends Model
 
     protected $fillable = [
         'name',
-        'period_start',
-        'period_end'
     ];
 
     protected $hidden = [
@@ -25,8 +23,6 @@ class Period extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
-        'period_start' => 'datetime:Y-m-d',
-        'period_end'   => 'datetime:Y-m-d',
     ];
 
     public function InstrumentTopics() {

@@ -47,6 +47,12 @@ class AuditForm extends Model
         'auditor_member_list'
     ];
 
+    protected $with = [
+        'department',
+        'auditor',
+        'period'
+    ];
+
     public function auditor()
     {
         return $this->belongsTo(User::class, 'auditor_id', 'id');
