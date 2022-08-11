@@ -25,8 +25,8 @@ class FulfillmentRequest extends FormRequest
     {
         return [
             'instrument_id'  => 'exists:instruments,id',
-            'description'    => 'string',
-            'file'           => 'nullable',
+            'description'    => 'nullable|string',
+            'file'           => 'nullable|file',
         ];
     }
 }

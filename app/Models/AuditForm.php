@@ -26,6 +26,7 @@ class AuditForm extends Model
         'audit_type',
         'audit_title',
         'audit_status',
+        'audit_standart',
         'audit_at'
     ];
 
@@ -71,6 +72,16 @@ class AuditForm extends Model
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function results()
+    {
+        return $this->hasMany(AuditFormResult::class, 'audit_form_id', 'id');
+    }
+
+    public function reject()
+    {
+        return $this->hasMany(AuditRejectDescription::class, 'audit_form_id', 'id');
     }
 
     public function scopeIsStatus($query, $param)

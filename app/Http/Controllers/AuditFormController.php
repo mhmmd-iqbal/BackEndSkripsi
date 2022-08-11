@@ -79,12 +79,10 @@ class AuditFormController extends Controller
                 $data = $data->where('auditee_id', auth()->user()->id);
             } else if(Gate::allows('isAuditor')) {
                 // get result if login auditor
-                $data = $data->where('auditor_id', auth()->user()->id );
+                $data = $data->where('auditor_id', auth()->user()->id);
             }
 
-            if(isset($validated['periode_id'])) {
-                $data = $data->where('periode_id', $validated['periode_id'] );
-            }
+            $data = isset($validated['period_id']) ? $data->where('period_id', $validated['period_id']) : $data;
 
             $data = $pagination ? $data->paginate(10) : $data->get();
 
@@ -98,22 +96,46 @@ class AuditFormController extends Controller
     public function show($id)
     {
         $audit          = AuditForm::find($id);
-        
-        $instruments    = Instrument::isAvailable()
-                            ->isType($audit->scope_type)
-                            ->with('subTopic.topic') 
-                            ->whereHas('subTopic' , function($q) use ($audit) {
-                                $q->whereHas('topic' , function($qq) use ($audit) {
-                                    $qq->where('period_id', $audit->period_id);
-                                });
-                                $q->orderBy('instrument_topic_id');
-                            })
-                            ->orderBy('instrument_sub_topic_id')
-                            ->get();
-        
+                            
+        $topics         = InstrumentTopic::with(['subTopics' => function($sub_topic) use ($audit) {
+                                $sub_topic->with(['instruments' => function($instrument) use ($audit){
+                                    $instrument->isAvailable();
+                                    $instrument->isType($audit->scope_type);
+                                }]);
+                                $sub_topic->whereHas('instruments');
+                        }])
+                        ->whereHas('subTopics', function($sub_topic) use ($audit){
+                            $sub_topic->whereHas('instruments', function($instrument) use ($audit){
+                                $instrument->isAvailable();
+                                $instrument->isType($audit->scope_type);
+                            });
+                        })
+                        ->where('period_id', $audit->period_id)
+                        ->orderBy('id')
+                        ->get();
+
         return $this->apiRespond('ok', [
             'audit'         => $audit,
-            'instrument'    => $instruments
+            'topic'         => $topics
+        ]);
+    }
+
+    public function result($id) {
+        $audit          = AuditForm::find($id);
+        $result         = AuditFormResult::where('audit_form_id', $audit->id)
+                        ->with(['instrumentOrigin' => function($instrument) {
+                            $instrument->with(['subTopic' => function($sub_topic) {
+                                $sub_topic->with('topic');
+                                $sub_topic->orderBy('instrument_topic_id');
+                            }]);
+                            $instrument->orderBy('instrument_sub_topic_id');
+                        }])
+                        ->get();
+      
+
+        return $this->apiRespond('ok', [
+            'audit'         => $audit,
+            'result'        => $result
         ]);
     }
 
@@ -152,6 +174,17 @@ class AuditFormController extends Controller
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }    
+    }
+
+    public function finishFulfillment($audit_id) {
+        if(!Gate::allows('isAuditee')) {
+            abort(401, 'Unauthorized');
+        }
+
+        $audit      = AuditForm::findOrFail($audit_id);
+        $audit->update(['audit_status' => 2]);
+
+        return $this->apiRespond('ok', [], 200);
     }
 
     public function approve($audit_id, $instrument_id)
@@ -229,4 +262,6 @@ class AuditFormController extends Controller
             return $this->apiRespond($th->getMessage(), [], 500);
         }
     }
+
+    public function approval(Request $request, $audit_id);
 }

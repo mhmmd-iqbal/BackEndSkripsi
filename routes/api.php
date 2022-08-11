@@ -78,6 +78,9 @@ Route::group(['middleware' => 'api'], function () {
             Route::get('/{id}', [AuditFormController::class, 'show']);
 
             Route::post('/{audit_id}/instrument/{instrument_id}/fulfillment', [AuditFormController::class, 'fulfillment']);
+            Route::get('/{audit_id}/result', [AuditFormController::class, 'result']);
+            Route::put('/{audit_id}/finish/fulfillment', [AuditFormController::class, 'finishFulfillment']);
+            Route::put('/{audit_id}/approval', [AuditFormController::class, 'approval']);
             Route::put('/{audit_id}/instrument/{instrument_id}/approve', [AuditFormController::class, 'approve']);
             Route::put('/{audit_id}/instrument/{instrument_id}/reject', [AuditFormController::class, 'reject']);
         });

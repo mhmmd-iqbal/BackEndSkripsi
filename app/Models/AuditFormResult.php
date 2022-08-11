@@ -35,7 +35,7 @@ class AuditFormResult extends Model
         return $this->belongsTo(AuditForm::class, 'audit_form_id', 'id');
     }
 
-    public function instrument()
+    public function instrumentOrigin()
     {
         return $this->belongsTo(Instrument::class, 'instrument_id', 'id');
     }
