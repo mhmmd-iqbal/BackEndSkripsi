@@ -263,5 +263,7 @@ class AuditFormController extends Controller
         }
     }
 
-    public function approval(Request $request, $audit_id);
+    public function approval(Request $request, $audit_id){
+        
+    }
 }
