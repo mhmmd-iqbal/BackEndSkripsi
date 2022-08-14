@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Audit\ApproveRequest;
 use App\Http\Requests\Audit\FulfillmentRequest;
 use App\Http\Requests\Audit\IndexRequest;
 use App\Http\Requests\Audit\RejectFulfillmentRequest;
@@ -16,6 +17,7 @@ use App\Models\Period;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -187,83 +189,76 @@ class AuditFormController extends Controller
         return $this->apiRespond('ok', [], 200);
     }
 
-    public function approve($audit_id, $instrument_id)
+    public function approve(ApproveRequest $request, $audit_id)
     {
         if(!Gate::allows('isAuditor')) {
             abort(401, 'Unauthorized');
         }
+
+        $validated = $request->validated();
 
         $audit      = AuditForm::findOrFail($audit_id);
-        $instrument = Instrument::findOrFail($instrument_id);
 
+        DB::beginTransaction();
         try {
-            $data       = AuditFormResult::updateOrCreate([
-                'audit_form_id' => $audit->id,
-                'instrument_id' => $instrument->id 
-            ],
-            [
-                'instrument'    => $instrument->matrix,
-                'approval'      => 1
-            ]);
+            $audit->update(['audit_status' => 3]);
 
-            return $this->apiRespond('ok', $data, 200);
+            foreach($validated['data'] as $data) {
+                // get instrument information from audit result id
+                $instrument = AuditFormResult::findOrFail($data['instrument_id'])->instrumentOrigin()->first();
+
+                // updated approval
+                AuditFormResult::updateOrCreate([
+                    'audit_form_id' => $audit->id,
+                    'instrument_id' => $instrument->id 
+                ],
+                [
+                    'instrument'    => $instrument->matrix,
+                    'approval'      => $data['approve']
+                ]);
+                
+                // insert rejected information if rejected 
+                if(!$data['approve']) {
+                    $department = $audit->department;
+                    $auditor    = $audit->auditor;
+                    $auditee    = $audit->auditee;
+                    $period     = $audit->period;
+    
+                    AuditRejectDescription::updateOrCreate([
+                        'department_id'             => $department->id,
+                        'period_id'                 => $period->id,
+                        'audit_form_id'             => $audit->id,
+                        'auditee_id'                => $auditee->id,
+                        'auditor_id'                => $auditor->id,
+                        'instrument_id'             => $instrument->id,
+                    ],[
+                        'revision'                  => '1',
+                        'document_no'               => $audit->document_no . self::setNumber(),
+                        'category'                  => $data['category'],
+                        'auditee_name'              => $auditee->name,
+                        'auditor_name'              => $auditor->name,
+                        'instrument_topic_name'     => $instrument->subTopic->topic->name,
+                        'finding_description'       => $data['finding_description'],
+                        'root_caused_description'   => $data['root_caused_description'],
+                        'consequence_description'   => $data['consequence_description'],  
+                        'scope_type'                => $audit->scope_type
+                    ]);
+                }
+            }   
+            DB::commit();
+            return $this->apiRespond('ok', [], 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return $this->apiRespond($th->getMessage(), [], 500);
         }
     }
 
-    public function reject(RejectFulfillmentRequest $request, $audit_id, $instrument_id)
+    public function setNumber()
     {
-        if(!Gate::allows('isAuditor')) {
-            abort(401, 'Unauthorized');
-        }
-        $validated    = $request->validated();
-        
-        try {
-            $audit      = AuditForm::findOrFail($audit_id);
-            $instrument = Instrument::findOrFail($instrument_id);
-            $department = $audit->department;
-            $auditor    = $audit->auditor;
-            $auditee    = $audit->auditee;
-            $period     = $audit->period;
+        //Get the highest "id" in the table + 1
+        $max_id= AuditRejectDescription::max('id') + 1;
 
-
-            $data       = AuditFormResult::updateOrCreate([
-                'audit_form_id' => $audit->id,
-                'instrument_id' => $instrument->id 
-            ],
-            [
-                'instrument'    => $instrument->matrix,
-                'approval'      => 0
-            ]);
-
-            AuditRejectDescription::updateOrCreate([
-                'department_id'             => $department->id,
-                'period_id'                 => $period->id,
-                'audit_form_id'             => $audit->id,
-                'auditee_id'                => $auditee->id,
-                'auditor_id'                => $auditor->id,
-                'instrument_id'             => $instrument->id,
-            ],[
-                'revision'                  => $validated['revision'],
-                'document_no'               => $validated['document_no'],
-                'category'                  => $validated['category'],
-                'auditee_name'              => $auditee->name,
-                'auditor_name'              => $auditor->name,
-                'instrument_topic_name'     => $instrument->subTopic->topic->name,
-                'finding_description'       => $validated['finding_description'],
-                'root_caused_Description'   => $validated['root_caused_Description'],
-                'consequence_description'   => $validated['consequence_description'],  
-                'scope_type'                => $audit->scope_type
-            ]);
-
-            return $this->apiRespond('ok', $data, 200);
-        } catch (\Throwable $th) {
-            return $this->apiRespond($th->getMessage(), [], 500);
-        }
-    }
-
-    public function approval(Request $request, $audit_id){
-        
+        //set format of document number (XX00001)
+        return '/REJECT' . sprintf('%04d', $max_id);
     }
 }
