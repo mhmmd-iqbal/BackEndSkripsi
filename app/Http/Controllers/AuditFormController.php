@@ -253,6 +253,61 @@ class AuditFormController extends Controller
         }
     }
 
+    public function getRejectedAudit(Request $request)
+    {
+        if(!Gate::allows('isAuditee')){
+            abort(401, 'Unauthorized');
+        }
+
+        $pagination = $request->pagination ?? true;   
+        
+        $rejected = new AuditRejectDescription();
+
+        $data = $rejected->where('auditee_id', auth()->user()->id)
+                ->with('auditForm', 'instrument.subTopic.topic');
+
+        $data = isset($request->period_id) ? $data->where('period_id', $request->period_id) : $data;
+
+        $data = $data->orderBy('id', 'DESC');
+        $data = $pagination ? $data->paginate(10) : $data->get();
+
+        return $this->apiRespond('ok', $data);
+    }
+
+    public function rejectedAuditDetail($id) 
+    {
+
+        $rejected = new AuditRejectDescription();
+
+        $data = $rejected
+                ->with('auditForm', 'instrument.subTopic.topic')
+                ->find($id);
+        
+        return $this->apiRespond('ok', $data);
+    }
+
+    public function inputActionPlan(Request $request, $id) 
+    {
+        if(!Gate::allows('isAuditee')){
+            abort(401, 'Unauthorized');
+        }
+
+        $rejected = new AuditRejectDescription();
+
+        $rejected->find($id)->update(
+            [
+                'action_plan_description'   => $request->action_plan_description
+            ]
+        );
+
+        $data = $rejected
+                ->with('auditForm', 'instrument.subTopic.topic')
+                ->find($id);
+
+        return $this->apiRespond('ok', $data);
+
+    }
+
     public function setNumber()
     {
         //Get the highest "id" in the table + 1

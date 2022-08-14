@@ -73,6 +73,10 @@ Route::group(['middleware' => 'api'], function () {
         });
         
         Route::group(['prefix' => 'audits'], function(){
+            Route::get('/rejected', [AuditFormController::class, 'getRejectedAudit']);
+            Route::get('/rejected/{id}', [AuditFormController::class, 'RejectedAuditDetail']);
+            Route::put('/rejected/{id}', [AuditFormController::class, 'inputActionPlan']);
+
             Route::get('/', [AuditFormController::class, 'index']);
             Route::post('/', [AuditFormController::class, 'store']);
             Route::get('/{id}', [AuditFormController::class, 'show']);
@@ -85,6 +89,7 @@ Route::group(['middleware' => 'api'], function () {
 
         Route::group(['prefix' => 'report'], function(){
             Route::get('/total-data', [ReportController::class, 'totalData']);
+            Route::get('/audit-chart', [ReportController::class, 'auditChart']);
         });
     });
 });

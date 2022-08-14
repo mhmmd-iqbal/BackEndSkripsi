@@ -25,10 +25,14 @@ class AuditRejectDescription extends Model
         'auditor_name',
         'instrument_topic_name',
         'finding_description',
-        'root_caused_Description',
+        'root_caused_description',
         'consequence_description',
         'action_plan_description',
         'scope_type'
+    ];
+
+    protected $appends = [
+        'is_set_action_plan'
     ];
 
     protected $hidden = [
@@ -73,5 +77,10 @@ class AuditRejectDescription extends Model
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function getIsSetActionPlanAttribute()
+    {
+        return $this->action_plan_description === null ? false : true;
     }
 }
