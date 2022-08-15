@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\InstrumentSubTopicController;
 use App\Http\Controllers\InstrumentTopicController;
+use App\Http\Controllers\MajorController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
@@ -28,6 +29,10 @@ Route::group(['middleware' => 'api'], function () {
     });
     
     Route::group(['middleware' => 'jwt.verify'], function(){
+        Route::group(['prefix' => 'majors'], function() {
+            Route::get('/', [MajorController::class, 'index']);
+        });
+
         Route::group(['prefix' => 'periods'], function(){
             Route::get('/', [PeriodController::class, 'index']);
             Route::post('/', [PeriodController::class, 'store']);

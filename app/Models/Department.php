@@ -38,4 +38,9 @@ class Department extends Model
     {
         return $this->hasMany(AuditForm::class);
     }
+
+    public function major()
+    {
+        return $this->belongsTo(Major::class, 'major_id', 'id');
+    }
 }
