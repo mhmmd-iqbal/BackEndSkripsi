@@ -14,7 +14,7 @@ class ReportController extends Controller
 {
     public function totalData()
     {
-        if(!Gate::allows('isAdmin') || !Gate::allows('isManager')) {
+        if(!Gate::allows('isAdmin') && !Gate::allows('isManager')) {
             abort(401, 'Unauthorized');
         }
 
@@ -39,7 +39,7 @@ class ReportController extends Controller
 
     public function auditChart()
     {
-        if(!Gate::allows('isAdmin')){
+        if(!Gate::allows('isAdmin') && !Gate::allows('isManager')){
             abort(401, 'Unauthorized');
         }
 
