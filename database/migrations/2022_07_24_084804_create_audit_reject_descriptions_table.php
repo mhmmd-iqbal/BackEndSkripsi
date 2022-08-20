@@ -37,6 +37,7 @@ class CreateAuditRejectDescriptionsTable extends Migration
 
             $table->enum('scope_type', ['academic', 'non_academic'])->nullable();
             $table->timestamps();
+            $table->softDeletes();
             
         });
     }

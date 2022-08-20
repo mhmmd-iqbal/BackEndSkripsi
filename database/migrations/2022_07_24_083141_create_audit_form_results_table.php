@@ -22,6 +22,7 @@ class CreateAuditFormResultsTable extends Migration
             $table->string('evidence_file', 255)->nullable();
             $table->tinyInteger('approval')->nullable()->default(null);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -31,6 +31,7 @@ class CreateAuditFormsTable extends Migration
             $table->date('audit_at')->nullable();
             $table->tinyInteger('audit_status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
