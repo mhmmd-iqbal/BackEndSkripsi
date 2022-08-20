@@ -115,7 +115,8 @@ class UserController extends Controller
                 'email'     => $validated['email'] ?? $data->email,
                 'nip'       => $validated['nip'] ?? $data->nip,
                 'role'      => $validated['role'] ?? $data->role,
-                'password'  => isset($validated['password']) ? bcrypt($validated['password']) : $data->password 
+                'password'  => isset($validated['password']) ? bcrypt($validated['password']) : $data->password,
+                'phone'     => $validated['phone'] ?? $data->phone
             ]);
             
             return $this->apiRespond('ok', $data, 200);

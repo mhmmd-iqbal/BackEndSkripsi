@@ -28,7 +28,8 @@ class UpdateRequest extends FormRequest
             'email'     => 'string|email',
             'nip'       => 'string',
             'role'      => 'string|in:admin,manager,auditor,auditee',
-            'password'  => 'string'
+            'password'  => 'string',
+            'phone'
         ];
     }
 }
