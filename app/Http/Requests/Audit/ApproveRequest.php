@@ -24,6 +24,8 @@ class ApproveRequest extends FormRequest
     public function rules()
     {
         return [
+            'positive_issue'                 => 'required|array',
+            'conclusion'                     => 'required|array',
             'data.*.instrument_id'           => 'required',
             'data.*.approve'                 => 'required',
             "data.*.category"                => 'nullable|string|required_if:data.*.approve,false',

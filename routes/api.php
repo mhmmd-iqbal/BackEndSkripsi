@@ -8,6 +8,7 @@ use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\InstrumentSubTopicController;
 use App\Http\Controllers\InstrumentTopicController;
 use App\Http\Controllers\MajorController;
+use App\Http\Controllers\PdfGeneratorController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\UserController;
 |
 */
 Route::group(['middleware' => 'api'], function () {
+    Route::get('/download', [PdfGeneratorController::class, 'generate']);
+    
     Route::group(['prefix' => 'auth'], function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/logout', [AuthController::class, 'logout']);

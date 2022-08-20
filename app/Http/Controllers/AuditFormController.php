@@ -201,7 +201,11 @@ class AuditFormController extends Controller
 
         DB::beginTransaction();
         try {
-            $audit->update(['audit_status' => 3]);
+            $audit->update([
+                'audit_status'           => 3,
+                'json_conclusion'        => json_encode($validated['conclusion']),
+                'json_positive_issue'    => json_encode($validated['positive_issue']),
+            ]);
 
             foreach($validated['data'] as $data) {
                 // get instrument information from audit result id

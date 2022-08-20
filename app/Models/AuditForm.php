@@ -27,7 +27,9 @@ class AuditForm extends Model
         'audit_title',
         'audit_status',
         'audit_standart',
-        'audit_at'
+        'audit_at',
+        'json_positive_issue',
+        'json_conclusion'
     ];
 
     protected $hidden = [
@@ -39,13 +41,16 @@ class AuditForm extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s',
-        'updated_at' => 'datetime:Y-m-d H:i:s',
-        'audit_at'   => 'datetime:Y-m-d',
+        'created_at'    => 'datetime:Y-m-d H:i:s',
+        'updated_at'    => 'datetime:Y-m-d H:i:s',
+        'audit_at'      => 'datetime:Y-m-d H:i:s',
+        'audit_status'  => 'integer'
     ];
 
     protected $appends = [
-        'auditor_member_list'
+        'auditor_member_list',
+        'conclusion',
+        'positive_issue'
     ];
 
     protected $with = [
@@ -92,5 +97,15 @@ class AuditForm extends Model
     public function getAuditorMemberListAttribute()
     {
         return json_decode($this->auditor_member_list_json);
+    }
+
+    public function getConclusionAttribute()
+    {
+        return json_decode($this->json_conclusion);
+    }
+
+    public function getPositiveIssueAttribute()
+    {
+        return json_decode($this->json_positive_issue);
     }
 }

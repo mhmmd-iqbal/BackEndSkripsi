@@ -34,8 +34,14 @@ class DepartmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request)
-    {
+    {   
         $validated = $request->validated();
+        
+        $dept_count = Department::where('name', $validated['name'])->count();
+
+        if($dept_count > 0) {
+            return $this->apiRespond($validated['name']. ' sudah ada', [], 400);
+        }
 
         try {
             $data = Department::create($validated);

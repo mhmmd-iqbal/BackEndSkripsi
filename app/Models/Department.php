@@ -15,7 +15,8 @@ class Department extends Model
         'user_id',
         'level', 
         'name',
-        'scope_type'
+        'scope_type',
+        'major_id'
     ];
 
     protected $casts = [

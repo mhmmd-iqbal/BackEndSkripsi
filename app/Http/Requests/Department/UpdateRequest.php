@@ -27,7 +27,8 @@ class UpdateRequest extends FormRequest
             'level'         => 'nullable|in:D1,D2,D3,D4',
             'name'          => 'required|string',
             'scope_type'    => 'in:academic,non_academic',
-            'user_id'       => 'exists:users,id'
+            'user_id'       => 'exists:users,id',
+            'major_id'      => 'required_if:scope_type,academic'
         ];
     }
 }
