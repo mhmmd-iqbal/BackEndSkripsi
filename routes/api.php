@@ -58,6 +58,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::group(['prefix' => 'topics'], function(){
             Route::get('/', [InstrumentTopicController::class, 'index']);
             Route::post('/', [InstrumentTopicController::class, 'store']);
+            Route::put('/{id}', [InstrumentTopicController::class, 'update']);
         });
 
         Route::group(['prefix' => 'sub-topics'], function(){
