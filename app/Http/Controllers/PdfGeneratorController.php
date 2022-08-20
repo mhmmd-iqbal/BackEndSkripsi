@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditForm;
 use Illuminate\Http\Request;
 
 use PDF;
 
 class PdfGeneratorController extends Controller
 {
-    public function generate()
+    public function generate($audit_id)
     {
-        $pdf = PDF::loadView('documents.audit.index');
-        $pdf->setPaper('A4', 'portrait'); 
-        $result = $pdf->stream();
+        $audit = AuditForm::with(['auditee', 'reject', 'results'])->find($audit_id);
 
-        return response($result, 200)
-              ->header('Content-Type', 'application/pdf');
+        $pdf = PDF::loadView('documents.audit.index', compact('audit'));
+        $pdf->setPaper('A4', 'portrait'); 
+        return $pdf->stream('Dokumen.pdf');
     }
 }

@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [PdfGeneratorController::class, 'generate']);
+Route::get('/{audit_id}', [PdfGeneratorController::class, 'generate']);

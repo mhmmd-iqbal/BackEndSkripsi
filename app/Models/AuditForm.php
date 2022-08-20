@@ -37,7 +37,9 @@ class AuditForm extends Model
         'period_id',
         'auditee_id',
         'auditor_id',
-        'auditor_member_list_json'
+        'auditor_member_list_json',
+        'json_positive_issue',
+        'json_conclusion'
     ];
 
     protected $casts = [

@@ -37,7 +37,7 @@
                     <tr>
                         <td class="main-size" style="padding-right: 20px">No. Dok</td>
                         <td class="main-size">:</td>
-                        <td class="main-size"></td>
+                        <td class="main-size">{{$audit->document_no}}</td>
                     </tr>
                     <tr>
                         <td class="main-size" style="padding-right: 20px">Revisi</td>
@@ -47,7 +47,7 @@
                     <tr>
                         <td class="main-size" style="padding-right: 20px">Tgl Eff</td>
                         <td class="main-size">:</td>
-                        <td class="main-size"></td>
+                        <td class="main-size">{{date('d M Y', strtotime($audit->created_at))}} </td>
                     </tr>
                     <tr>
                         <td class="main-size" style="padding-right: 20px">Jlh Hal</td>
@@ -75,29 +75,28 @@
     <table style="border-collapse: collapse" border="1px" width="100%">
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Jurusan</th>
-            <td colspan="3"></td>
+            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">{{$audit->department->major->name}}</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Program Studi</th>
-            <td colspan="3"></td>
+            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">{{$audit->department->name}}</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Alamat</th>
-            <td colspan="3"></td>
+            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">Politeknik Negeri Lhokseumawe, Buket Rata, Lhokseumawe</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Kaprodi</th>
-            <td></td>
-            <td colspan="2"></td>
+            <td class="main-size" style="text-align: left; padding-left: 5px">{{$audit->auditee->name}}</td>
+            <td colspan="2" class="main-size" style="text-align: left; padding-left: 5px">{{$audit->auditee->phone}}</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Tanggal Audit</th>
-            <td colspan="3"></td>
+            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">{{date('d M Y H:i:s', strtotime($audit->created_at))}}</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Ketua Auditor</th>
-            <td></td>
-            <td colspan="2"></td>
+            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">{{$audit->auditor->name}}</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Tanda Tangan Ketua Auditor</th>
@@ -120,7 +119,9 @@
         </tr>
     </table>
     <ol>
-        <li class="main-size">Sudah memiliki Teaching Factory dalam melaksanakan proses pembelajaran</li>
+        @foreach ($audit->positive_issue as $positive_issue)
+            <li class="main-size">{{$positive_issue}}</li>
+        @endforeach
     </ol>
 
     {{-- section 4 --}}
@@ -148,14 +149,19 @@
             <th class="label-size">KTS Mi</th>
             <th class="label-size">KTS Ma</th>
     </tr>
-    <tr>
-            <td align="center">1</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-    </tr>
+    @php
+        $no = 1;
+        @endphp
+    @foreach ($audit->reject as $reject)
+        <tr>
+            <td class="main-size" align="center">{{$no++}}</td>
+            <td class="main-size" style="padding-left: 5px">{{$reject->finding_description}} </td>
+            <td class="main-size" align="center">{{$reject->category === 'observasi' ? 'V' : ''}} </td>
+            <td class="main-size" align="center">{{$reject->category === 'kts_minor' ? 'V' : ''}} </td>
+            <td class="main-size" align="center">{{$reject->category === 'kts_mayor' ? 'V' : ''}} </td>
+            <td class="main-size" style="padding-left: 5px"></td>           
+        </tr>
+    @endforeach
     </table>
 
     {{-- section 5 --}}
@@ -171,9 +177,9 @@
         </tr>
     </table>
     <ol>
-        <li class="main-size">
-            Visi Misi Prodi TRKI belum diverifikasi dan dievaluasi, sehingga tidak dapat diukur indikator pencapaian dalam hal pelaksanaan implementasi dokumen tersebut. 
-        </li>
+        @foreach ($audit->conclusion as $conclusion)
+            <li class="main-size">{{$conclusion}}</li>
+        @endforeach
     </ol>
 
     {{-- section 5 --}}
@@ -190,7 +196,22 @@
     </table>
     <ol>
         <li class="main-size">
-            FM/PNL/P4M-04/01-00
+            {{$audit->documnet_no}}-00
+        </li>
+        <li class="main-size">
+            {{$audit->documnet_no}}-01
+        </li>
+        <li class="main-size">
+            {{$audit->documnet_no}}-02
+        </li>
+        <li class="main-size">
+            {{$audit->documnet_no}}-03
+        </li>
+        <li class="main-size">
+            {{$audit->documnet_no}}-04
+        </li>
+        <li class="main-size">
+            {{$audit->documnet_no}}-05
         </li>
     </ol>
 </div>
