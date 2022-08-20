@@ -64,6 +64,48 @@ class AuditFormController extends Controller
         } catch (\Throwable $th) {
             return $this->apiRespond($th->getMessage(), [], 500);
         }
+    
+    }
+    public function update(Request $request, $id)
+    {
+        if(!Gate::allows('isAdmin')){
+            abort(401, 'Unauthorized');
+        }
+
+        $auditor    = User::where('id', $request->auditor_id)->isRole('auditor')->first();
+        $period     = Period::where('id', $request->period_id)->first();
+        $department = Department::where('id', $request->department_id)->first();
+        $auditee    = $department->user;
+
+        $audit_form  = AuditForm::find($id);
+
+        if(is_null($auditor) || is_null ($period) || is_null($department)) {
+            return $this->apiRespond('Not Found ID', [], 404);
+        }
+        try {
+            $data = [
+                'department_id'             => $request->department_id ?? $audit_form->department_id,
+                'period_id'                 => $request->period_id ?? $audit_form->period_id,
+                'auditee_id'                => $auditee->id,
+                'auditor_id'                => $request->auditor_id,
+                'document_no'               => $request->document_no,
+                'department_name'           => $department->name,
+                'auditee_name'              => $auditee->name,
+                'auditor_name'              => $auditor->name,
+                'auditor_member_list_json'  => json_encode($request->auditor_member_list_json),
+                'scope_type'                => $department->scope_type,
+                'audit_type'                => $request->audit_type ?? $audit_form->audit_type,
+                'audit_title'               => $request->audit_title ?? $audit_form->audit_title,
+                'audit_at'                  => $request->audit_at ?? $audit_form->audit_at,
+                'audit_standart'            => $request->audit_standart ?? $audit_form->audit_standart
+            ];
+    
+            $result = $audit_form->update($data);
+    
+            return $this->apiRespond('ok', $result, 200);
+        } catch (\Throwable $th) {
+            return $this->apiRespond($th->getMessage(), [], 500);
+        }
     }
 
     public function index(IndexRequest $request)

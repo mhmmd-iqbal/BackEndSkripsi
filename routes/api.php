@@ -86,6 +86,7 @@ Route::group(['middleware' => 'api'], function () {
             Route::get('/', [AuditFormController::class, 'index']);
             Route::post('/', [AuditFormController::class, 'store']);
             Route::get('/{id}', [AuditFormController::class, 'show']);
+            Route::put('/{id}', [AuditFormController::class, 'update']);
 
             Route::post('/{audit_id}/instrument/{instrument_id}/fulfillment', [AuditFormController::class, 'fulfillment']);
             Route::get('/{audit_id}/result', [AuditFormController::class, 'result']);
