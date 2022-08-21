@@ -42,7 +42,6 @@ class DepartmentController extends Controller
         if($dept_count > 0) {
             return $this->apiRespond($validated['name']. ' sudah ada', [], 400);
         }
-
         try {
             $data = Department::create($validated);
             return $this->apiRespond('ok', $data, 200);

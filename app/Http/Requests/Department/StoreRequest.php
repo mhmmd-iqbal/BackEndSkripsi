@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
             'name'          => 'string',
             'scope_type'    => 'in:academic,non_academic',
             'user_id'       => 'exists:users,id',
-            'major_id'      => 'required_if:scope_type,academic|exists:majors,id'
+            'major_id'      => 'required_if:scope_type,academic'
         ];
     }
 }

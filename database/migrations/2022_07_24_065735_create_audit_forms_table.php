@@ -28,7 +28,7 @@ class CreateAuditFormsTable extends Migration
             $table->enum('scope_type', ['academic', 'non_academic'])->nullable();
             $table->string('audit_type', 100)->nullable()->default('Lapangan');
             $table->string('audit_title', 100)->nullable();
-            $table->date('audit_at')->nullable();
+            $table->dateTime('audit_at')->nullable();
             $table->tinyInteger('audit_status')->default(1);
             $table->timestamps();
             $table->softDeletes();
