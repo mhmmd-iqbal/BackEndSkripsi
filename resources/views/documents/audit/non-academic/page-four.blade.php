@@ -115,7 +115,7 @@
         <tr>
             <td style="text-align: left; padding-left: 5px" height="30px" class="main-size">{{$reject->auditor_name}}</td>
             <td style="text-align: left; padding-left: 5px" height="30px" class="main-size">{{$reject->auditee_name}} </td>
-            <td style="text-align: left; padding-left: 5px" height="30px" class="main-size">                {{date('d M Y H:i:s', strtotime($audit->audit_at))}}</td>
+            <td style="text-align: left; padding-left: 5px" height="30px" class="main-size">{{date('d M Y H:i:s', strtotime($audit->audit_at))}}</td>
         </tr>
     </table>
 </div>  

@@ -8,6 +8,7 @@ use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\InstrumentSubTopicController;
 use App\Http\Controllers\InstrumentTopicController;
 use App\Http\Controllers\MajorController;
+use App\Http\Controllers\PdfGeneratorController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
@@ -97,6 +98,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::group(['prefix' => 'report'], function(){
             Route::get('/total-data', [ReportController::class, 'totalData']);
             Route::get('/audit-chart', [ReportController::class, 'auditChart']);
+            Route::get('/pdf/{audit_id}', [PdfGeneratorController::class, 'generate']);
         });
     });
 });
