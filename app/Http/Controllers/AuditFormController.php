@@ -188,10 +188,6 @@ class AuditFormController extends Controller
 
     public function fulfillment(FulfillmentRequest $request, $audit_id, $instrument_id)
     {
-        if(!Gate::allows('isAuditee')) {
-            abort(401, 'Unauthorized');
-        }
-
         $validated    = $request->validated();
         
         if(isset($validated['file'])) {
@@ -224,9 +220,6 @@ class AuditFormController extends Controller
     }
 
     public function finishFulfillment($audit_id) {
-        if(!Gate::allows('isAuditee')) {
-            abort(401, 'Unauthorized');
-        }
 
         $audit      = AuditForm::findOrFail($audit_id);
         $audit->update(['audit_status' => 2]);
@@ -236,10 +229,6 @@ class AuditFormController extends Controller
 
     public function approve(ApproveRequest $request, $audit_id)
     {
-        if(!Gate::allows('isAuditor')) {
-            abort(401, 'Unauthorized');
-        }
-
         $validated = $request->validated();
 
         $audit      = AuditForm::findOrFail($audit_id);
@@ -304,10 +293,6 @@ class AuditFormController extends Controller
 
     public function getRejectedAudit(Request $request)
     {
-        if(!Gate::allows('isAuditee')){
-            abort(401, 'Unauthorized');
-        }
-
         $pagination = $request->pagination ?? true;   
         
         $rejected = new AuditRejectDescription();
