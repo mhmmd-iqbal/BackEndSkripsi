@@ -15,6 +15,7 @@ class InstrumentTopic extends Model
     protected $fillable = [
         'period_id',
         'name',
+        'is_available'
     ];
 
     protected $hidden = [
@@ -36,5 +37,10 @@ class InstrumentTopic extends Model
     public function subTopics()
     {
         return $this->hasMany(InstrumentSubTopic::class, 'instrument_topic_id', 'id');
+    }
+
+    public function scopeIsAvailable($query)
+    {
+        return $query->where('is_availbale', true);
     }
 }

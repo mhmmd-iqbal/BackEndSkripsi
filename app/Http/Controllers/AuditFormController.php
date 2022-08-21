@@ -147,13 +147,16 @@ class AuditFormController extends Controller
                                     $instrument->isType($audit->scope_type);
                                 }]);
                                 $sub_topic->whereHas('instruments');
+                                $sub_topic->isAvailable();
                         }])
                         ->whereHas('subTopics', function($sub_topic) use ($audit){
                             $sub_topic->whereHas('instruments', function($instrument) use ($audit){
                                 $instrument->isAvailable();
                                 $instrument->isType($audit->scope_type);
                             });
+                            $sub_topic->isAvailable();
                         })
+                        ->isAvailable()
                         ->where('period_id', $audit->period_id)
                         ->orderBy('id')
                         ->get();

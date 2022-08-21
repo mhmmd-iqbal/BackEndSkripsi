@@ -15,6 +15,7 @@ class InstrumentSubTopic extends Model
     protected $fillable = [
         'instrument_topic_id',
         'name',
+        'is_availbale'
     ];
 
     protected $casts = [
@@ -36,5 +37,10 @@ class InstrumentSubTopic extends Model
     public function instruments()
     {
         return $this->hasMany(Instrument::class, 'instrument_sub_topic_id', 'id');
+    }
+
+    public function scopeIsAvailable($query)
+    {
+        return $query->where('is_availbale', true);
     }
 }
