@@ -1,64 +1,60 @@
 <div class="wrapper-page">
-    {{-- section 1 --}}
-    <table border="1px" width = "100%" style="border-collapse: collapse; padding-top: 10px" class="main-table">
-        <tr style="border-top: 1px solid black">
-            <td width="20%" style="text-align: center">
-                <img src="{{ public_path('img/poltek.png')}}" width="80px" height="80px" />
-            </td>
-            <td colspan="2" style="text-align: center">
-                <div class="label-size">
-                    KEMENTERIAN PENDIDIKAN DAN KEBUDAYAAN
-                </div>
-                <div class="title-size">
-                    POLITEKNIK NEGERI LHOKSEUMAWE
-                </div>
-                <div class="main-size">
-                    Jalan Banda Aceh-Medan Km. 280,3 Buketrata, Lhokseumawe, 24301 PO.BOX 90
-                </div>
-                <div class="main-size">
-                    Telepon: (0645) 42785 Fax: 42785, Laman: www.pnl.ac.id
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" width="80%" style="text-align: center">
-                <div class="label-size">
-                    FORM LAPORAN
-                </div>    
-                <div class="label-size">
-                    AUDIT MUTU INTERNAL
-                </div>
-                <div class="label-size">
-                    PROGRAM STUDI
-                </div>
-            </td>
-            <td>
-                <table class="child-table" border="0">
-                    <tr>
-                        <td class="main-size" style="padding-right: 20px">No. Dok</td>
-                        <td class="main-size">:</td>
-                        <td class="main-size">{{$audit->document_no}}</td>
-                    </tr>
-                    <tr>
-                        <td class="main-size" style="padding-right: 20px">Revisi</td>
-                        <td class="main-size">:</td>
-                        <td class="main-size"></td>
-                    </tr>
-                    <tr>
-                        <td class="main-size" style="padding-right: 20px">Tgl Eff</td>
-                        <td class="main-size">:</td>
-                        <td class="main-size">{{date('d M Y', strtotime($audit->created_at))}} </td>
-                    </tr>
-                    <tr>
-                        <td class="main-size" style="padding-right: 20px">Jlh Hal</td>
-                        <td class="main-size">:</td>
-                        <td class="main-size">1 dari 3</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
+    <header>
+        <table border="1px" width = "100%" style="border-collapse: collapse; padding-top: 10px" class="main-table">
+            <tr style="border-top: 1px solid black">
+                <td width="20%" style="text-align: center">
+                    <img src="{{ public_path('img/poltek.png')}}" width="80px" height="80px" />
+                </td>
+                <td colspan="2" style="text-align: center">
+                    <div class="label-size">
+                        KEMENTERIAN PENDIDIKAN DAN KEBUDAYAAN
+                    </div>
+                    <div class="title-size">
+                        POLITEKNIK NEGERI LHOKSEUMAWE
+                    </div>
+                    <div class="main-size">
+                        Jalan Banda Aceh-Medan Km. 280,3 Buketrata, Lhokseumawe, 24301 PO.BOX 90
+                    </div>
+                    <div class="main-size">
+                        Telepon: (0645) 42785 Fax: 42785, Laman: www.pnl.ac.id
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" width="80%" style="text-align: center">
+                    @foreach ($header as $item)
+                    <div class="label-size">
+                        {{$item}}
+                    </div>
+                    @endforeach
+                </td>
+                <td>
+                    <table class="child-table" border="0">
+                        <tr>
+                            <td class="main-size" style="padding-right: 20px">No. Dok</td>
+                            <td class="main-size">:</td>
+                            <td class="main-size">{{$audit->document_no}}{{$no_document}}</td>
+                        </tr>
+                        <tr>
+                            <td class="main-size" style="padding-right: 20px">Revisi</td>
+                            <td class="main-size">:</td>
+                            <td class="main-size"></td>
+                        </tr>
+                        <tr>
+                            <td class="main-size" style="padding-right: 20px">Tgl Eff</td>
+                            <td class="main-size">:</td>
+                            <td class="main-size">{{date('d M Y', strtotime($audit->created_at))}} </td>
+                        </tr>
+                        <tr>
+                            <td class="main-size" style="padding-right: 20px">Jlh Hal</td>
+                            <td class="main-size">:</td>
+                            <td class="main-size"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </header>
     {{-- section 2 --}}
     <div class="break-point"></div>
     <table width="100%">
@@ -92,7 +88,7 @@
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Tanggal Audit</th>
-            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">{{date('d M Y H:i:s', strtotime($audit->created_at))}}</td>
+            <td colspan="3" class="main-size" style="text-align: left; padding-left: 5px">{{date('d M Y H:i:s', strtotime($audit->audit_at))}}</td>
         </tr>
         <tr>
             <th class="label-size" width="20%" style="text-align: left; padding-left: 5px">Ketua Auditor</th>
@@ -123,7 +119,7 @@
             <li class="main-size">{{$positive_issue}}</li>
         @endforeach
     </ol>
-
+   
     {{-- section 4 --}}
     <div class="break-point"></div>
     <table width="100%">
@@ -182,7 +178,7 @@
         @endforeach
     </ol>
 
-    {{-- section 5 --}}
+    {{-- section 6 --}}
     <div class="break-point"></div>
     <table width="100%">
         <tr>
@@ -196,22 +192,22 @@
     </table>
     <ol>
         <li class="main-size">
-            {{$audit->documnet_no}}-00
+            {{$audit->document_no}}-00
         </li>
         <li class="main-size">
-            {{$audit->documnet_no}}-01
+            {{$audit->document_no}}-01
         </li>
         <li class="main-size">
-            {{$audit->documnet_no}}-02
+            {{$audit->document_no}}-02
         </li>
         <li class="main-size">
-            {{$audit->documnet_no}}-03
+            {{$audit->document_no}}-03
         </li>
         <li class="main-size">
-            {{$audit->documnet_no}}-04
+            {{$audit->document_no}}-04
         </li>
         <li class="main-size">
-            {{$audit->documnet_no}}-05
+            {{$audit->document_no}}-05
         </li>
     </ol>
 </div>
