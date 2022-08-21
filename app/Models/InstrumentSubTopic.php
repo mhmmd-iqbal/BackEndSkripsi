@@ -15,7 +15,7 @@ class InstrumentSubTopic extends Model
     protected $fillable = [
         'instrument_topic_id',
         'name',
-        'is_availbale'
+        'is_available'
     ];
 
     protected $casts = [
@@ -41,6 +41,6 @@ class InstrumentSubTopic extends Model
 
     public function scopeIsAvailable($query)
     {
-        return $query->where('is_availbale', true);
+        return $query->where('is_available', true);
     }
 }

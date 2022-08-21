@@ -41,6 +41,6 @@ class InstrumentTopic extends Model
 
     public function scopeIsAvailable($query)
     {
-        return $query->where('is_availbale', true);
+        return $query->where('is_available', true);
     }
 }
