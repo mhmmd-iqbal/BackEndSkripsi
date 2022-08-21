@@ -297,8 +297,16 @@ class AuditFormController extends Controller
         
         $rejected = new AuditRejectDescription();
 
-        $data = $rejected->where('auditee_id', auth()->user()->id)
+        $data = $rejected
                 ->with('auditForm', 'instrument.subTopic.topic');
+                
+        if(Gate::allows('isAuditee')) {
+            // get result if login auditee 
+            $data = $data->where('auditee_id', auth()->user()->id);
+        } else if(Gate::allows('isAuditor')) {
+            // get result if login auditor
+            $data = $data->where('auditor_id', auth()->user()->id);
+        }
 
         $data = isset($request->period_id) ? $data->where('period_id', $request->period_id) : $data;
 
